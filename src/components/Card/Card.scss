@@ -2,15 +2,14 @@
 
 $card-border-radius: 5px;
 
-li.card-item {
+.card-item {
     background-color: #fff;
     padding: $gap;
     border-radius: $card-border-radius;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 
-    &:not(:last-child) {
-        margin-bottom: $gap;
-    }
+    margin-bottom: 10px;
 
     .card-cover {
         display: block;
