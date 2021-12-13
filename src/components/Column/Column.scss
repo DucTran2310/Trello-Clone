@@ -3,7 +3,6 @@
 $column-header-height: 46px;
 $column-footer-height: 46px;
 
-$list-bg-color: #ebecf0;
 $column-height: calc(#{$board-content-height} - #{$gap * 2});
 
 .column {
@@ -13,7 +12,7 @@ $column-height: calc(#{$board-content-height} - #{$gap * 2});
     margin-left: $gap;
 
     > * {
-        background-color: $list-bg-color;
+        background-color: $column-bg-color;
         padding: 0 8px;
     }
 
@@ -48,9 +47,7 @@ $column-height: calc(#{$board-content-height} - #{$gap * 2});
 
     .card-list {
         margin: 0;
-        max-height: calc(
-            #{$column-height} - #{$column-header-height} - #{$column-footer-height}
-        );
+        max-height: calc(#{$column-height} - #{$column-header-height} - #{$column-footer-height});
         overflow-y: auto;
 
         &::-webkit-scrollbar {
@@ -62,8 +59,8 @@ $column-height: calc(#{$board-content-height} - #{$gap * 2});
         }
 
         &::-webkit-scrollbar-thumb {
-            background-color: darken($list-bg-color, 15);
-            border-right: 5px solid $list-bg-color;
+            background-color: darken($column-bg-color, 15);
+            border-right: 5px solid $column-bg-color;
         }
 
         .card-ghost {
