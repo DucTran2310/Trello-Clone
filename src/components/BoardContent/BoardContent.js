@@ -110,6 +110,29 @@ function BoardContent() {
     toggleOpenNewColumn()
   }
 
+  const onUpdateColumn = (newColumnToUpdate) => {
+    const columnIdToUpdate = newColumnToUpdate.id
+
+    let newColumns = [...columns]
+    const columnIndexToUpdate = newColumns.findIndex(item => item.id === columnIdToUpdate)
+
+    if (newColumnToUpdate._destroy) {
+      //remove column => xoa 1 ptu tu vi tri index
+      newColumns.splice(columnIndexToUpdate, 1)
+    } else {
+      // update column info
+      newColumns.splice(columnIndexToUpdate, 1, newColumnToUpdate)
+    }
+
+    let newBoard = { ...board }
+    newBoard.columnOrder = newColumns.map(column => column.id)
+    newBoard.columns = newColumns
+
+    setColumns(newColumns)
+    setBoard(newBoard)
+    //console.log(columnIndexToUpdate)
+  }
+
   return (
     <div className="board-content">
       <Container
@@ -129,19 +152,18 @@ function BoardContent() {
       >
         {columns.map((column, index) => (
           <Draggable key={index}>
-            <Column column={column} onCardDrop={onCardDrop} />{' '}
+            <Column column={column} onCardDrop={onCardDrop} onUpdateColumn={onUpdateColumn} />
           </Draggable>
-        ))}{' '}
-      </Container>{' '}
+        ))}
+      </Container>
       <ContainerBootstrap className="trello-container-bootstrap">
-        {' '}
         {!openColumn && (
           <Row>
             <Col className="add-new-column" onClick={toggleOpenNewColumn}>
-              <i className="fa fa-plus icon" /> Add another column{' '}
-            </Col>{' '}
+              <i className="fa fa-plus icon" /> Add another column
+            </Col>
           </Row>
-        )}{' '}
+        )}
         {openColumn && (
           <Row>
             <Col className="enter-new-column">
@@ -156,20 +178,20 @@ function BoardContent() {
                 onChange={onNewColumnTitleChange}
                 // Sự kiện gõ phím
                 onKeyDown={e => e.key === 'Enter' && addNewColumn()}
-              />{' '}
+              />
               <Button variant="success" size="sm" onClick={addNewColumn}>
-                Add column{' '}
-              </Button>{' '}
+                Add column
+              </Button>
               <span
                 className="cancel-new-column"
                 onClick={toggleOpenNewColumn}
               >
                 <i className="fa fa-trash" />
-              </span>{' '}
-            </Col>{' '}
+              </span>
+            </Col>
           </Row>
-        )}{' '}
-      </ContainerBootstrap>{' '}
+        )}
+      </ContainerBootstrap>
     </div>
   )
 }
