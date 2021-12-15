@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Draggable } from 'react-smooth-dnd'
-import { Dropdown, Form } from 'react-bootstrap'
+import { Dropdown, Form, Button } from 'react-bootstrap'
+import { cloneDeep } from 'lodash'
 
 import './Column.scss'
 import Card from 'components/Card/Card'
@@ -21,14 +22,28 @@ function Column(props) {
   }
 
   const [columnTitle, setColumnTitle] = useState('')
-  const handleColumnTitleChange = useCallback((e) =>
-    setColumnTitle(e.target.value), []
-  )
+  const handleColumnTitleChange = (e) => setColumnTitle(e.target.value)
+
+  const [openCard, setOpenCard] = useState(false)
+  const toggleOpenNewCard = () => setOpenCard(!openCard)
+
+  const newCardTextAreaRef = useRef('')
+
+  const [newCardTitle, setCardTitle] = useState('') //string null
+  const onNewCardTitleChange = e => setCardTitle(e.target.value)
 
   // Khi thay doi title useEffect moi chay, neu ko la chay vo han
   useEffect(() => {
     setColumnTitle(column.title)
   }, [column.title])
+
+  // Focus and select input (có nháy trong input và tô đậm)
+  useEffect(() => {
+    if (newCardTextAreaRef && newCardTextAreaRef.current) {
+      newCardTextAreaRef.current.focus()
+      newCardTextAreaRef.current.select()
+    }
+  }, [openCard])
 
   const onConfirmModalAction = (type) => {
     // console.log(type)
@@ -53,6 +68,36 @@ function Column(props) {
       title: columnTitle
     }
     onUpdateColumn(newColumn)
+  }
+
+  // add new card
+  const addNewCard = () => {
+    // Nếu string rỗng thì focus
+    if (!newCardTitle) {
+      newCardTextAreaRef.current.focus()
+      return
+    }
+
+    const newCardToAdd = {
+      // random 5 characters
+      id: Math.random().toString(36).substr(2, 5), //will remove when we implement code api
+      boardId: column.boardId,
+      columnId: column.id,
+      title: newCardTitle.trim(), // cắt khoảng trống đầu cuối
+      cover: null
+    }
+
+    //console.log(column)
+    // cloneDeep ko lam thay doi data goc
+    let newColumn = cloneDeep(column)
+    // push them 1 ptu vao cuoi card va card order
+    newColumn.cards.push(newCardToAdd)
+    newColumn.cardOrder.push(newCardToAdd.id)
+
+    //console.log(newColumn)
+    onUpdateColumn(newColumn)
+    setCardTitle('')
+    toggleOpenNewCard()
   }
 
   return (
@@ -111,11 +156,42 @@ function Column(props) {
             </Draggable>
           ))}
         </Container>
+        {openCard &&
+          <div className="add-new-card-area">
+            <Form.Control
+              size="sm"
+              as="textarea"
+              rows="3"
+              placeholder="Enter a title for this card..."
+              className="textarea-enter-new-card"
+              // focus input
+              ref={newCardTextAreaRef}
+              value={newCardTitle}
+              onChange={onNewCardTitleChange}
+              // // Sự kiện gõ phím
+              onKeyDown={e => e.key === 'Enter' && addNewCard()}
+            />
+          </div>
+        }
       </div>
       <footer>
-        <div className="footer-actions">
-          <i className="fa fa-plus icon"></i> Add another card
-        </div>
+        {openCard &&
+          <div className="add-new-card-actions">
+            <Button variant="success" size="sm" onClick={addNewCard}>
+              Add card
+            </Button>
+            <span
+              className="cancel-icon" onClick={toggleOpenNewCard}
+            >
+              <i className="fa fa-trash" />
+            </span>
+          </div>
+        }
+        {!openCard &&
+          <div className="footer-actions" onClick={toggleOpenNewCard}>
+            <i className="fa fa-plus icon"></i> Add another card
+          </div>
+        }
       </footer>
       <ConfirmModal
         show={showConfirmModal}
