@@ -21,9 +21,9 @@ function Column(props) {
   }
 
   const [columnTitle, setColumnTitle] = useState('')
-  const handleColumnTitleChange = useCallback((e) => {
+  const handleColumnTitleChange = useCallback((e) =>
     setColumnTitle(e.target.value), []
-  })
+  )
 
   // Khi thay doi title useEffect moi chay, neu ko la chay vo han
   useEffect(() => {
@@ -50,7 +50,7 @@ function Column(props) {
   const handleColumnTitleBlur = () => {
     const newColumn = {
       ...column,
-      _title: columnTitle
+      title: columnTitle
     }
     onUpdateColumn(newColumn)
   }
@@ -69,8 +69,8 @@ function Column(props) {
             onBlur={handleColumnTitleBlur}
             // Sự kiện gõ phím
             onKeyDown={saveContentAfterPressEnter}
-            onClick={selectAllInLineText}
             // khi keo tha ko bi focus
+            onClick={selectAllInLineText}
             onMouseDown={e => e.preventDefault()}
             spellCheck="false"
           />

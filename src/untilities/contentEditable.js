@@ -6,7 +6,7 @@ export const saveContentAfterPressEnter = (e) => {
   }
 }
 
-// Select on input value
+// Select all input value when click
 export const selectAllInLineText = (e) => {
   e.target.focus()
   e.target.select()
