@@ -1,5 +1,5 @@
 import Column from 'components/Column/Column'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, Draggable } from 'react-smooth-dnd'
 import { Container as ContainerBootstrap, Row, Col, Form, Button } from 'react-bootstrap'
 import { isEmpty } from 'lodash'
@@ -15,11 +15,13 @@ function BoardContent() {
   const [columns, setColumns] = useState([]) //array null
   const [openColumn, setOpenColumn] = useState(false)
 
+  const toggleOpenNewColumn = () => setOpenColumn(!openColumn)
+
   const newColumnInputRef = useRef(null)
 
   const [newColumnTitle, setColumnTitle] = useState('') //string null
 
-  const onNewColumnTitleChange = useCallback(e => setColumnTitle(e.target.value), [])
+  const onNewColumnTitleChange = e => setColumnTitle(e.target.value)
 
   // Initial data
   useEffect(() => {
@@ -77,10 +79,6 @@ function BoardContent() {
     }
   }
 
-  const toggleOpenNewColumn = () => {
-    setOpenColumn(!openColumn)
-  }
-
   const addNewColumn = () => {
     // Nếu string rỗng thì focus
     if (!newColumnTitle) {
@@ -121,6 +119,7 @@ function BoardContent() {
       newColumns.splice(columnIndexToUpdate, 1)
     } else {
       // update column info
+      console.log(newColumnToUpdate)
       newColumns.splice(columnIndexToUpdate, 1, newColumnToUpdate)
     }
 
@@ -152,7 +151,11 @@ function BoardContent() {
       >
         {columns.map((column, index) => (
           <Draggable key={index}>
-            <Column column={column} onCardDrop={onCardDrop} onUpdateColumn={onUpdateColumn} />
+            <Column
+              column={column}
+              onCardDrop={onCardDrop}
+              onUpdateColumn={onUpdateColumn}
+            />
           </Draggable>
         ))}
       </Container>
@@ -183,7 +186,7 @@ function BoardContent() {
                 Add column
               </Button>
               <span
-                className="cancel-new-column"
+                className="cancel-icon"
                 onClick={toggleOpenNewColumn}
               >
                 <i className="fa fa-trash" />
