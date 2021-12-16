@@ -5,6 +5,25 @@
 -   \*\*nodejs
 -   \*\*npm
 
+## **🏨 Folder structure**
+
+```
+  src
+  |__actions
+  |          |__initialData.js
+  |__components
+  |           |__AppBar
+  |           |__BoardBar
+  |           |__BoardContent
+  |           |__Card
+  |           |__Column
+  |           |__Commmon
+  |__untilities
+  |___setting.scss
+  |__App.js
+  |__App.scss
+```
+
 Clone project and run test.
 
 ```
@@ -13,3 +32,12 @@ $ cd <project_dir>
 $ npm install
 $ npm start
 ```
+
+-   Frontend
+
+    -   Lodash(isEmpty, cloneDeep)
+    -   React
+    -   react-smooth-dnd (drag, drop)
+    -   react-bootstrap
+    -   jsconfig.json => Relative import
+    -   eslint => format code
