@@ -41,3 +41,4 @@ $ npm start
     -   react-bootstrap
     -   jsconfig.json => Relative import
     -   eslint => format code
+    -   axios
