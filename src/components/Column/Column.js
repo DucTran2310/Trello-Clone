@@ -9,10 +9,11 @@ import ConfirmModal from 'components/Common/ConfirmModal'
 import { mapOrder } from 'untilities/sort'
 import { MODAL_ACTION_CONFIRM } from 'untilities/constants'
 import { saveContentAfterPressEnter, selectAllInLineText } from 'untilities/contentEditable'
+import { createNewCard, updateColumn } from 'actions/ApiCall'
 
 
 function Column(props) {
-  const { column, onCardDrop, onUpdateColumn } = props
+  const { column, onCardDrop, onUpdateColumnState } = props
   const cards = mapOrder(column.cards, column.cardOrder, '_id')
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -45,29 +46,36 @@ function Column(props) {
     }
   }, [openCard])
 
+  // Remove column
   const onConfirmModalAction = (type) => {
-    // console.log(type)
-    // if (type === MODAL_ACTION_CLOSE) {
-
-    // }
     if (type === MODAL_ACTION_CONFIRM) {
       //remove column
       const newColumn = {
         ...column,
         _destroy: true
       }
-      onUpdateColumn(newColumn)
+      //Call API Remove Column
+      updateColumn(newColumn._id, newColumn).then(updatedColumn => {
+        onUpdateColumnState(updatedColumn)
+      })
     }
     toggleShowConfirmModal()
   }
 
-  // su kien khi blur
+  // su kien khi blur, Update Column
   const handleColumnTitleBlur = () => {
-    const newColumn = {
-      ...column,
-      title: columnTitle
+    //So sánh title truyền xuống và title state hiện tại khác thì mới call API
+    if (columnTitle !== column.title) {
+      const newColumn = {
+        ...column,
+        title: columnTitle
+      }
+      //Call API Update Column
+      updateColumn(newColumn._id, newColumn).then(updatedColumn => {
+        updatedColumn.cards = newColumn.cards
+        onUpdateColumnState(updatedColumn)
+      })
     }
-    onUpdateColumn(newColumn)
   }
 
   // add new card
@@ -79,25 +87,24 @@ function Column(props) {
     }
 
     const newCardToAdd = {
-      // random 5 characters
-      id: Math.random().toString(36).substr(2, 5), //will remove when we implement code api
       boardId: column.boardId,
       columnId: column._id,
-      title: newCardTitle.trim(), // cắt khoảng trống đầu cuối
-      cover: null
+      title: newCardTitle.trim() // cắt khoảng trống đầu cuối
     }
+    // Call API
+    createNewCard(newCardToAdd).then(card => {
+      // cloneDeep ko lam thay doi data goc
+      let newColumn = cloneDeep(column)
+      // push them 1 ptu vao cuoi card va card order
+      newColumn.cards.push(card)
+      newColumn.cardOrder.push(card._id)
 
-    //console.log(column)
-    // cloneDeep ko lam thay doi data goc
-    let newColumn = cloneDeep(column)
-    // push them 1 ptu vao cuoi card va card order
-    newColumn.cards.push(newCardToAdd)
-    newColumn.cardOrder.push(newCardToAdd._id)
+      //console.log(newColumn)
+      onUpdateColumnState(newColumn)
+      setCardTitle('')
+      toggleOpenNewCard()
+    })
 
-    //console.log(newColumn)
-    onUpdateColumn(newColumn)
-    setCardTitle('')
-    toggleOpenNewCard()
   }
 
   return (
