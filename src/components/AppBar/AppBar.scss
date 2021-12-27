@@ -3,9 +3,124 @@ $appbar-bg-color: #3c9751;
 
 .navbar-app {
     height: $navbar-app-height;
-    padding-left: $gap;
+    padding: 20px 0;
     display: flex;
     align-items: center;
     background-color: $appbar-bg-color;
-    font-size: 1.5rem;
+    color: aliceblue;
+    .trello-appbar-container {
+        max-width: 100%;
+        .app-actions {
+            display: inline-flex;
+            height: 100%;
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            div.item {
+                padding: 6px 10px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+                &:not(:first-child) {
+                    margin-left: 4px;
+                }
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+                &.home {
+                    i {
+                        font-size: 15px;
+                    }
+                }
+                &.search {
+                    padding: 6px 0;
+                    .group-search {
+                        height: 19px;
+                        .input-search {
+                            max-height: 100%;
+                            background-color: inherit;
+                            color: inherit;
+                            border: none;
+                            font-size: 14px;
+                            &::placeholder {
+                                color: darken(aliceblue, 5);
+                                opacity: 1;
+                            }
+                        }
+                        .input-icon-search {
+                            padding: 0 8px 0 0;
+                            background-color: transparent;
+                            border: none;
+                            color: inherit;
+                        }
+                    }
+                }
+            }
+        }
+        .app-branding {
+            cursor: pointer;
+            a {
+                color: inherit;
+                img.top-logo {
+                    width: 120px;
+                }
+            }
+        }
+        .user-actions {
+            display: inline-flex;
+            height: 100%;
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            div.item {
+                padding: 6px 10px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+                &:not(:first-child) {
+                    margin-left: 4px;
+                }
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+                &.user-avatar {
+                    padding: 0;
+                    background-color: transparent;
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        &:hover {
+                            filter: brightness(120%);
+                        }
+                    }
+                }
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .app-actions {
+                margin-left: -8px;
+            }
+            div.all {
+                display: none;
+            }
+            div.home {
+                display: none;
+            }
+            div.boards {
+                display: none;
+            }
+            div.quick {
+                display: none;
+            }
+            div.news {
+                display: none;
+            }
+            div.notification {
+                display: none;
+            }
+        }
+    }
 }
