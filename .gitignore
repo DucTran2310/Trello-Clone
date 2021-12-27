@@ -27,3 +27,4 @@ jsconfig.json
 .prettierrc
 .editorconfig
 .env
+.firebase
